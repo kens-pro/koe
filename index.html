@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1分でわかる！あなたの声の健康診断</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* === 基本設定 === */
+        :root {
+            --color-bg: #F8F8F8;
+            --color-text: #333333;
+            --color-green-deep: #4A5C52;
+            --color-green-medium: #6C8B7C;
+            --color-blue-muted: #5E8098;
+            --font-family: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* === ゲーム全体のコンテナ === */
+        #game-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px GHS 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* === 各画面の共通スタイル === */
+        .game-screen {
+            padding: 40px 30px;
+            display: none; /* 初期状態では非表示 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .game-screen.active {
+            display: block; /* 表示する画面にこのクラスを追加 */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* === テキスト要素 === */
+        h1 {
+            font-size: 1.8em;
+            color: var(--color-green-deep);
+            margin-bottom: 15px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: var(--color-blue-muted);
+            margin-bottom: 25px;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #555;
+            text-align: left;
+        }
+        .small-text {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .center-text {
+            text-align: center;
+        }
+
+        /* === ボタン === */
+        .btn, .choice-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-family);
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn {
+            background-color: var(--color-green-deep);
+            color: white;
+        }
+        .btn:hover {
+            background-color: var(--color-green-medium);
+            transform: translateY(-2px);
+        }
+        .btn.secondary {
+            background-color: transparent;
+            color: var(--color-blue-muted);
+            border: 2px solid var(--color-blue-muted);
+        }
+        .btn.secondary:hover {
+            background-color: var(--color-blue-muted);
+            color: white;
+        }
+        .choice-btn {
+            background-color: #f0f0f0;
+            color: var(--color-text);
+        }
+        .choice-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* === 質問画面 === */
+        #question-counter {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--color-green-medium);
+            margin-bottom: 10px;
+        }
+        #question-text {
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-bottom: 30px;
+            min-height: 3em;
+            text-align: center;
+        }
+        .choice-grid {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* === 結果画面 === */
+        #result-icon {
+            font-size: 4em;
+            color: var(--color-green-deep);
+            margin-bottom: 20px;
+        }
+        #result-type {
+            font-size: 1.2em;
+            color: var(--color-green-deep);
+        }
+        #result-title {
+            font-size: 2em;
+            color: var(--color-green-deep);
+            margin-bottom: 10px;
+        }
+        .advice-box {
+            background-color: var(--color-bg);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .advice-box h3 {
+            color: var(--color-green-medium);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .advice-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .advice-box li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .advice-box li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+
+        <!-- 画面1: スタート画面 -->
+        <div id="screen-start" class="game-screen active">
+            <i id="start-icon" class="fas fa-stethoscope" style="font-size: 3em; color: var(--color-blue-muted); margin-bottom: 20px;"></i>
+            <h1>1分でわかる！<br>あなたの声の健康診断</h1>
+            <p class="center-text">簡単な質問で、あなたの声の状態と、もっと輝かせるためのヒントを見つけましょう。</p>
+            <button id="start-btn" class="btn">診断をはじめる</button>
+        </div>
+
+        <!-- 画面2: 年齢選択画面 -->
+        <div id="screen-age" class="game-screen">
+            <h2>まず、あなたの世代を<br>教えてください</h2>
+            <p class="center-text">世代に合わせたアドバイスをお届けします。</p>
+            <button class="choice-btn" data-age="student">学生さん</button>
+            <button class="choice-btn" data-age="adult">20代〜40代</button>
+            <button class="choice-btn" data-age="senior">50代以上</button>
+        </div>
+
+        <!-- 画面3: 質問画面 -->
+        <div id="screen-question" class="game-screen">
+            <div id="question-counter"></div>
+            <p id="question-text"></p>
+            <div class="choice-grid">
+                <button class="choice-btn" data-answer="yes">はい、気になります</button>
+                <button class="choice-btn" data-answer="no">いいえ</button>
+            </div>
+        </div>
+
+        <!-- 画面4: 結果画面 (カルテ) -->
+        <div id="screen-result" class="game-screen">
+            <i id="result-icon" class="fas fa-file-medical-alt"></i>
+            <p id="result-type" class="center-text">あなたの声の診断結果</p>
+            <h1 id="result-title"></h1>
+            <p id="result-description"></p>
+            
+            <div id="advice-container" class="advice-box">
+                <h3>ワンポイント処方箋</h3>
+                <ul id="advice-list"></ul>
+            </div>
+            
+            <p style="margin-top: 30px; text-align: center;">専門家と一緒に、あなたの声をケアしませんか？</p>
+            <a href="#" id="lp-link" class="btn">私にぴったりの特別レッスンを見る</a>
+            <p class="small-text">
+                ピアノやギターなど他のコースにご興味のある方は<a href="#" id="official-link">公式サイトへ</a>
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ゲームのデータ ---
+            const questions = [
+                { id: 'breath', text: '歌っている時、「息が続かないな…」と感じることはありますか？', advice: 'まずは深い呼吸から。腹式呼吸を意識すると、声が安定し、長く歌えるようになりますよ。' },
+                { id: 'tired', text: '歌い終わると、喉が疲れたり苦しくなったりしますか？', advice: 'リラックスが大切！歌う前に軽いストレッチで体をほぐすと、喉への負担が軽くなります。' },
+                { id: 'pitch', text: '高い声を出そうとすると、声がかすれたり裏返ったりしますか？', advice: '無理は禁物です。楽な鼻歌（ハミング）から練習すると、スムーズな発声の感覚が掴めます。' },
+                { id: 'lyrics', text: '早口の歌詞や、特定の言葉が言いにくいと感じますか？', advice: '鏡の前で歌ってみましょう！唇や舌をいつもより少し大きく動かす意識が、滑舌を良くするコツです。' }
+            ];
+
+            const results = {
+                'student': {
+                    0: { title: '声の健康優良児タイプ', description: '素晴らしい！声のコンディションはとても良い状態です。基礎を身につければ、あなたの歌はもっと魅力的になりますよ。その調子で楽しんで！' },
+                    1: { title: '声の伸びしろ発見タイプ', description: '少し気になる点があるようですね。でも大丈夫！それは大きな「伸びしろ」です。ちょっとしたコツで、友達も驚くような歌声に変わるかも！' },
+                    2: { title: 'じっくりケア推奨タイプ', description: 'いくつかの課題が見えてきましたね。でも、心配いりません。一つひとつ丁寧にケアすれば、あなたの声はもっと楽に、自由になります。プロのサポートで、新しい自分の声に出会いましょう！' }
+                },
+                'adult': {
+                    0: { title: '声の健康優良児タイプ', description: '素晴らしいコンディションです！日々の生活の中で、上手に声を使えていますね。歌うことを趣味にすれば、毎日がもっと輝きますよ。' },
+                    1: { title: '声の伸びしろ発見タイプ', description: '少しお疲れのサインかもしれませんね。でも大丈夫、それは「伸びしろ」です。自分のための時間を作って声をケアすれば、心も体もリフレッシュできます。' },
+                    2: { title: 'じっくりケア推奨タイプ', description: 'お仕事や生活での変化が、声に現れているのかもしれません。でも、心配いりません。声の仕組みに基づいたケアで、自信とハリを取り戻せます。自分を大切にする時間、始めませんか？' }
+                },
+                'senior': {
+                    0: { title: '声の健康優良児タイプ', description: '素晴らしい！とても良い声の状態を保っていますね。歌うことは、最高の健康習慣です。仲間と一緒に、これからも楽しみましょう！' },
+                    1: { title: '声の伸びしろ発見タイプ', description: '年齢による自然な変化ですね。でも、それは大きな「伸びしろ」です。正しいケアで、声はまだまだ若返ります。楽しみながら健康づくりを始めましょう！' },
+                    2: { title: 'じっくりケア推奨タイプ', description: '声の変化を感じていらっしゃいますね。でも、心配いりません。正しいトレーニングは、声だけでなく、飲み込む力などにも良い影響が期待できます。さあ、ここから始めましょう！' }
+                }
+            };
+            
+            // --- 変数定義 ---
+            let currentScreen = 'screen-start';
+            let ageGroup = '';
+            let currentQuestionIndex = 0;
+            let answers = {}; 
+
+            // --- DOM要素取得 ---
+            const screens = document.querySelectorAll('.game-screen');
+            const startBtn = document.getElementById('start-btn');
+            const ageButtons = document.querySelectorAll('#screen-age .choice-btn');
+            const questionCounter = document.getElementById('question-counter');
+            const questionText = document.getElementById('question-text');
+            const answerButtons = document.querySelectorAll('#screen-question .choice-btn');
+
+            // --- 関数定義 ---
+            function showScreen(screenId) {
+                currentScreen = screenId;
+                screens.forEach(screen => {
+                    screen.classList.toggle('active', screen.id === screenId);
+                });
+            }
+
+            function showQuestion() {
+                if (currentQuestionIndex < questions.length) {
+                    const question = questions[currentQuestionIndex];
+                    questionCounter.textContent = `質問 ${currentQuestionIndex + 1} / ${questions.length}`;
+                    questionText.textContent = question.text;
+                    showScreen('screen-question');
+                } else {
+                    showResult();
+                }
+            }
+            
+            function showResult() {
+                const yesCount = Object.values(answers).filter(answer => answer === 'yes').length;
+                const resultIndex = yesCount <= 1 ? 0 : (yesCount <= 3 ? 1 : 2); // 0-1問=0, 2-3問=1, 4問=2
+                
+                const resultData = results[ageGroup][resultIndex];
+
+                document.getElementById('result-title').textContent = resultData.title;
+                document.getElementById('result-description').textContent = resultData.description;
+
+                const adviceList = document.getElementById('advice-list');
+                adviceList.innerHTML = ''; // リストを初期化
+                
+                let adviceCount = 0;
+                questions.forEach(q => {
+                    if (answers[q.id] === 'yes') {
+                        const li = document.createElement('li');
+                        li.textContent = q.advice;
+                        adviceList.appendChild(li);
+                        adviceCount++;
+                    }
+                });
+
+                document.getElementById('advice-container').style.display = adviceCount > 0 ? 'block' : 'none';
+
+                showScreen('screen-result');
+            }
+
+            // --- イベントリスナー設定 ---
+            startBtn.addEventListener('click', () => {
+                showScreen('screen-age');
+            });
+
+            ageButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    ageGroup = e.target.dataset.age;
+                    showQuestion();
+                });
+            });
+
+            answerButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const questionId = questions[currentQuestionIndex].id;
+                    answers[questionId] = e.target.dataset.answer;
+                    currentQuestionIndex++;
+                    showQuestion();
+                });
+            });
+            
+            // 外部リンクはダミーです。実際のURLに書き換えてください。
+            document.getElementById('lp-link').href = "YOUR_LP_URL_HERE"; 
+            document.getElementById('official-link').href = "YOUR_OFFICIAL_SITE_URL_HERE";
+
+        });
+    </script>
+
+</body>
+</html>
