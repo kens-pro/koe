@@ -7,7 +7,7 @@
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome (for icons) -->
@@ -43,7 +43,7 @@
             max-width: 500px;
             background-color: white;
             border-radius: 16px;
-            box-shadow: 0 8px GHS 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* GHSという不要な記述を削除 */
             overflow: hidden;
             text-align: center;
         }
@@ -107,19 +107,11 @@
         .btn {
             background-color: var(--color-green-deep);
             color: white;
+            text-decoration: none; /* aタグのスタイル調整 */
         }
         .btn:hover {
             background-color: var(--color-green-medium);
             transform: translateY(-2px);
-        }
-        .btn.secondary {
-            background-color: transparent;
-            color: var(--color-blue-muted);
-            border: 2px solid var(--color-blue-muted);
-        }
-        .btn.secondary:hover {
-            background-color: var(--color-blue-muted);
-            color: white;
         }
         .choice-btn {
             background-color: #f0f0f0;
@@ -155,13 +147,17 @@
             margin-bottom: 20px;
         }
         #result-type {
-            font-size: 1.2em;
-            color: var(--color-green-deep);
+            font-size: 1em; /* 画像に合わせて調整 */
+            color: #777; /* 画像に合わせて調整 */
+            font-weight: 500;
         }
         #result-title {
             font-size: 2em;
             color: var(--color-green-deep);
             margin-bottom: 10px;
+        }
+        #result-description {
+            text-align: center; /* 画像に合わせて調整 */
         }
         .advice-box {
             background-color: var(--color-bg);
@@ -173,7 +169,7 @@
         .advice-box h3 {
             color: var(--color-green-medium);
             font-size: 1.2em;
-            margin-bottom: 10px;
+            margin-bottom: 15px; /* 少し余白を追加 */
             text-align: center;
         }
         .advice-box ul {
@@ -237,9 +233,9 @@
             </div>
             
             <p style="margin-top: 30px; text-align: center;">専門家と一緒に、あなたの声をケアしませんか？</p>
-            <a href="#" id="lp-link" class="btn">私にぴったりの特別レッスンを見る</a>
+            <a href="#" id="lp-link" class="btn" target="_blank">私にぴったりの特別レッスンを見る</a>
             <p class="small-text">
-                ピアノやギターなど他のコースにご興味のある方は<a href="#" id="official-link">公式サイトへ</a>
+                ピアノやギター、ヴァイオリンなど他のコースにご興味のある方は<br><a href="#" id="official-link" target="_blank">公式サイトへ</a>
             </p>
         </div>
 
@@ -268,8 +264,7 @@
                 },
                 'senior': {
                     0: { title: '声の健康優良児タイプ', description: '素晴らしい！とても良い声の状態を保っていますね。歌うことは、最高の健康習慣です。仲間と一緒に、これからも楽しみましょう！' },
-                    1: { title: '声の伸びしろ発見タイプ', description: '年齢による自然な変化ですね。でも、それは大きな「伸びしろ」です。正しいケアで、声はまだまだ若返ります。楽しみながら健康づくりを始めましょう！' },
-                    2: { title: 'じっくりケア推奨タイプ', description: '声の変化を感じていらっしゃいますね。でも、心配いりません。正しいトレーニングは、声だけでなく、飲み込む力などにも良い影響が期待できます。さあ、ここから始めましょう！' }
+                    1: { title: 'じっくりケア推奨タイプ', description: '声の変化を感じていらっしゃいますね。でも、心配いりません。正しいトレーニングは、声だけでなく、飲み込む力などにも良い影響が期待できます。さあ、ここから始めましょう！' }
                 }
             };
             
@@ -308,7 +303,14 @@
             
             function showResult() {
                 const yesCount = Object.values(answers).filter(answer => answer === 'yes').length;
-                const resultIndex = yesCount <= 1 ? 0 : (yesCount <= 3 ? 1 : 2); // 0-1問=0, 2-3問=1, 4問=2
+                
+                // senior（50代以上）の場合だけ診断基準を変更
+                let resultIndex;
+                if (ageGroup === 'senior') {
+                    resultIndex = yesCount >= 1 ? 1 : 0; // 1問以上「はい」なら「じっくりケア推奨タイプ」
+                } else {
+                    resultIndex = yesCount <= 1 ? 0 : (yesCount <= 3 ? 1 : 2); // 0-1問=0, 2-3問=1, 4問=2
+                }
                 
                 const resultData = results[ageGroup][resultIndex];
 
@@ -316,7 +318,7 @@
                 document.getElementById('result-description').textContent = resultData.description;
 
                 const adviceList = document.getElementById('advice-list');
-                adviceList.innerHTML = ''; // リストを初期化
+                adviceList.innerHTML = '';
                 
                 let adviceCount = 0;
                 questions.forEach(q => {
@@ -354,9 +356,13 @@
                 });
             });
             
-            // 外部リンクはダミーです。実際のURLに書き換えてください。
+            // --- ▼▼▼ リンク先URLをここに設定 ▼▼▼ ---
+            // 「私にぴったりの特別レッスンを見る」ボタンのリンク先
             document.getElementById('lp-link').href = "YOUR_LP_URL_HERE"; 
-            document.getElementById('official-link').href = "YOUR_OFFICIAL_SITE_URL_HERE";
+            
+            // 「公式サイトへ」のリンク先
+            document.getElementById('official-link').href = "https://www.toriimusic.co.jp/adult/?_gl=1*mwjtx9*_gcl_au*MTAzMTE1NTM0NC4xNzUzNjAwMTA4";
+            // --- ▲▲▲ リンク先URLの設定はここまで ▲▲▲ ---
 
         });
     </script>
