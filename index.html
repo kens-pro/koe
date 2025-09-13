@@ -7,7 +7,7 @@
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome (for icons) -->
@@ -53,7 +53,7 @@
             max-width: 500px;
             background-color: white;
             border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* GHSという不要な記述を削除 */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             text-align: center;
         }
@@ -99,6 +99,28 @@
         .center-text {
             text-align: center;
         }
+        
+        /* ▼▼▼ 変更点 ▼▼▼ */
+        /* === スタート画面のロゴ（追加） === */
+        #logo-container {
+            margin-bottom: 15px; /* アイコンとの間隔 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px; /* ロゴとテキストの間隔 */
+        }
+        #logo-container img {
+            max-width: 100px; /* ロゴ画像の最大幅 */
+            height: auto;
+        }
+        #logo-container p {
+            margin: 0; /* pタグのデフォルトマージンをリセット */
+            font-size: 0.9em;
+            color: #777;
+            font-weight: 500;
+        }
+        /* ▲▲▲ 変更ここまで ▲▲▲ */
+
 
         /* === ボタン === */
         .btn, .choice-btn {
@@ -203,21 +225,30 @@
 
     <div id="game-container">
 
+        <!-- ▼▼▼ 変更点 ▼▼▼ -->
         <!-- 画面1: スタート画面 -->
         <div id="screen-start" class="game-screen active">
+            <!-- ロゴとテキストを追加 -->
+            <div id="logo-container">
+                <!-- ↓↓↓ "torii_logo.png" の部分は実際のファイル名に変更してください ↓↓↓ -->
+                <img src="images/favicon.png" alt="トリイミュージック ロゴ">
+                <p>トリイミュージックプレゼンツ</p>
+            </div>
+            
             <i id="start-icon" class="fas fa-stethoscope" style="font-size: 3em; color: var(--color-blue-muted); margin-bottom: 20px;"></i>
             <h1>1分でわかる！<br>あなたの声の健康診断</h1>
             <p class="center-text">簡単な質問で、あなたの声の状態と、もっと輝かせるためのヒントを見つけましょう。</p>
             <button id="start-btn" class="btn">診断をはじめる</button>
         </div>
+        <!-- ▲▲▲ 変更ここまで ▲▲▲ -->
 
         <!-- 画面2: 年齢選択画面 -->
         <div id="screen-age" class="game-screen">
             <h2>まず、あなたの世代を<br>教えてください</h2>
             <p class="center-text">世代に合わせたアドバイスをお届けします。</p>
-            <button class="choice-btn" data-age="student">学生さん</button>
-            <button class="choice-btn" data-age="adult">20代〜40代</button>
-            <button class="choice-btn" data-age="senior">50代以上</button>
+            <button class="choice-btn" data-age="student">学生～20代</button>
+            <button class="choice-btn" data-age="adult">ミドルエイジ</button>
+            <button class="choice-btn" data-age="senior">シニアエイジ</button>
         </div>
 
         <!-- 画面3: 質問画面 -->
@@ -242,8 +273,8 @@
                 <ul id="advice-list"></ul>
             </div>
             
-            <p style="margin-top: 30px; text-align: center;">専門家と一緒に、あなたの声をケアしませんか？</p>
-            <a href="#" id="lp-link" class="btn" target="_blank">私にぴったりの特別レッスンを見る</a>
+            <p style="margin-top: 30px; text-align: center;">トリイミュージックで、あなたの声をケアしませんか？</p>
+            <a href="#" id="lp-link" class="btn" target="_blank">私にピッタリな声のレッスンを探す</a>
             <p class="small-text">
                 ピアノやギター、ヴァイオリンなど他のコースにご興味のある方は<br><a href="#" id="official-link" target="_blank">公式サイトへ</a>
             </p>
